@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 
 const CATEGORIES = ["한식", "양식", "중식", "일식"]
 const DIFFICULTIES = [
@@ -20,7 +20,29 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
   )
   const [steps, setSteps] = useState(initial?.steps?.length ? initial.steps : [""])
   const [notes, setNotes] = useState(initial?.notes ?? "")
+  const [image, setImage] = useState(initial?.image ?? null)
   const [errors, setErrors] = useState({})
+  const fileInputRef = useRef()
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      const img = new Image()
+      img.onload = () => {
+        const MAX_WIDTH = 800
+        const scale = Math.min(1, MAX_WIDTH / img.width)
+        const canvas = document.createElement("canvas")
+        canvas.width = img.width * scale
+        canvas.height = img.height * scale
+        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height)
+        setImage(canvas.toDataURL("image/jpeg", 0.75))
+      }
+      img.src = ev.target.result
+    }
+    reader.readAsDataURL(file)
+  }
 
   const updateIngredient = (i, field, value) =>
     setIngredients((prev) => prev.map((item, idx) => (idx === i ? { ...item, [field]: value } : item)))
@@ -52,6 +74,7 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
       ingredients: ingredients.filter((ing) => ing.name.trim()),
       steps: steps.filter((s) => s.trim()),
       notes: notes.trim(),
+      image: image ?? null,
     })
   }
 
@@ -64,6 +87,36 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
       </header>
 
       <form onSubmit={handleSubmit} style={styles.form} className="form-inner">
+        <Field label="사진">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleImageChange}
+          />
+          {image ? (
+            <div style={styles.imagePreviewWrapper}>
+              <img src={image} alt="미리보기" style={styles.imagePreview} />
+              <button
+                type="button"
+                style={styles.imageRemoveBtn}
+                onClick={() => { setImage(null); fileInputRef.current.value = "" }}
+              >
+                ✕ 사진 제거
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              style={styles.imageUploadBtn}
+              onClick={() => fileInputRef.current.click()}
+            >
+              📷 사진 추가
+            </button>
+          )}
+        </Field>
+
         <Field label="제목 *" error={errors.title}>
           <input
             style={inputStyle(errors.title)}
@@ -272,7 +325,43 @@ const styles = {
     width: "100%",
     transition: "all var(--transition-fast)",
   },
-  submitBtn: { 
+  imageUploadBtn: {
+    width: "100%",
+    padding: "32px",
+    border: "2px dashed var(--border-color)",
+    borderRadius: "var(--radius-lg)",
+    background: "var(--bg-input)",
+    color: "var(--text-muted)",
+    fontSize: 15,
+    fontWeight: 500,
+    cursor: "pointer",
+    transition: "all var(--transition-fast)",
+  },
+  imagePreviewWrapper: {
+    position: "relative",
+    borderRadius: "var(--radius-lg)",
+    overflow: "hidden",
+  },
+  imagePreview: {
+    width: "100%",
+    height: 220,
+    objectFit: "cover",
+    display: "block",
+  },
+  imageRemoveBtn: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    background: "rgba(0,0,0,0.55)",
+    color: "#fff",
+    border: "none",
+    borderRadius: "var(--radius-pill)",
+    padding: "6px 14px",
+    fontSize: 13,
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+  submitBtn: {
     background: "linear-gradient(135deg, var(--primary), var(--primary-hover))", 
     color: "#fff", 
     border: "none", 
