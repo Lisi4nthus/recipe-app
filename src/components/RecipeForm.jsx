@@ -80,13 +80,13 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
 
   return (
     <div className="page-form">
-      <header style={styles.header}>
-        <button type="button" onClick={onBack} style={styles.backBtn} className="hover-subtle-btn">← 뒤로</button>
-        <h2 style={styles.heading}>{heading}</h2>
+      <header className="form-header">
+        <button type="button" onClick={onBack} className="form-back-btn hover-subtle-btn">← 뒤로</button>
+        <h2 className="form-heading">{heading}</h2>
         <div style={{ width: 60 }} />
       </header>
 
-      <form onSubmit={handleSubmit} style={styles.form} className="form-inner">
+      <form onSubmit={handleSubmit} className="form-inner">
         <Field label="사진">
           <input
             ref={fileInputRef}
@@ -96,11 +96,11 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
             onChange={handleImageChange}
           />
           {image ? (
-            <div style={styles.imagePreviewWrapper}>
-              <img src={image} alt="미리보기" style={styles.imagePreview} />
+            <div className="form-image-preview-wrapper">
+              <img src={image} alt="미리보기" className="form-image-preview" />
               <button
                 type="button"
-                style={styles.imageRemoveBtn}
+                className="form-image-remove-btn"
                 onClick={() => { setImage(null); fileInputRef.current.value = "" }}
               >
                 ✕ 사진 제거
@@ -109,7 +109,7 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
           ) : (
             <button
               type="button"
-              style={styles.imageUploadBtn}
+              className="form-image-upload-btn"
               onClick={() => fileInputRef.current.click()}
             >
               📷 사진 추가
@@ -119,7 +119,7 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
 
         <Field label="제목 *" error={errors.title}>
           <input
-            style={inputStyle(errors.title)}
+            className={`form-input${errors.title ? " form-input--error" : ""}`}
             placeholder="레시피 이름"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -127,11 +127,11 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
         </Field>
 
         <Field label="카테고리">
-          <div style={styles.chips}>
+          <div className="form-chips">
             {CATEGORIES.map((c) => (
               <button
                 type="button" key={c}
-                style={{ ...styles.chip, ...(category === c ? styles.chipActive : {}) }}
+                className={`form-chip${category === c ? " form-chip--active" : ""}`}
                 onClick={() => setCategory((prev) => (prev === c ? "" : c))}
               >{c}</button>
             ))}
@@ -139,239 +139,80 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
         </Field>
 
         <Field label="난이도">
-          <div style={styles.chips}>
+          <div className="form-chips">
             {DIFFICULTIES.map((d) => (
               <button
                 type="button" key={d.value}
-                style={{ ...styles.chip, ...(difficulty === d.value ? styles.chipActive : {}) }}
+                className={`form-chip${difficulty === d.value ? " form-chip--active" : ""}`}
                 onClick={() => setDifficulty((prev) => (prev === d.value ? "" : d.value))}
               >{d.label}</button>
             ))}
           </div>
         </Field>
 
-        <div style={styles.row}>
-          <Field label="조리 시간 (분)" style={{ flex: 1 }}>
-            <input style={inputStyle()} type="number" min="1" placeholder="30"
+        <div className="form-row">
+          <Field label="조리 시간 (분)">
+            <input className="form-input" type="number" min="1" placeholder="30"
               value={cookingTime} onChange={(e) => setCookingTime(e.target.value)} />
           </Field>
-          <Field label="인분" style={{ flex: 1 }}>
-            <input style={inputStyle()} type="number" min="1" placeholder="2"
+          <Field label="인분">
+            <input className="form-input" type="number" min="1" placeholder="2"
               value={servings} onChange={(e) => setServings(e.target.value)} />
           </Field>
         </div>
 
         <Field label="재료 *" error={errors.ingredients}>
           {ingredients.map((ing, i) => (
-            <div key={i} style={styles.ingredientRow}>
-              <input style={{ ...inputStyle(), flex: 3 }} placeholder="재료명"
+            <div key={i} className="form-ingredient-row">
+              <input className="form-input" placeholder="재료명"
                 value={ing.name} onChange={(e) => updateIngredient(i, "name", e.target.value)} />
-              <input style={{ ...inputStyle(), flex: 2 }} placeholder="양"
+              <input className="form-input" placeholder="양"
                 value={ing.amount} onChange={(e) => updateIngredient(i, "amount", e.target.value)} />
-              <input style={{ ...inputStyle(), flex: 2 }} placeholder="단위"
+              <input className="form-input" placeholder="단위"
                 value={ing.unit} onChange={(e) => updateIngredient(i, "unit", e.target.value)} />
               {ingredients.length > 1 && (
-                <button type="button" style={styles.removeBtn} className="hover-icon-btn" onClick={() => removeIngredient(i)}>✕</button>
+                <button type="button" className="form-remove-btn hover-icon-btn" onClick={() => removeIngredient(i)}>✕</button>
               )}
             </div>
           ))}
-          <button type="button" style={styles.addBtn} className="hover-subtle-btn" onClick={addIngredient}>+ 재료 추가</button>
+          <button type="button" className="form-add-btn hover-subtle-btn" onClick={addIngredient}>+ 재료 추가</button>
         </Field>
 
         <Field label="조리법 *" error={errors.steps}>
           {steps.map((step, i) => (
-            <div key={i} style={styles.stepRow}>
-              <span style={styles.stepNum}>{i + 1}</span>
+            <div key={i} className="form-step-row">
+              <span className="form-step-num">{i + 1}</span>
               <textarea
-                style={{ ...inputStyle(), flex: 1, resize: "vertical", minHeight: 60 }}
+                className="form-input"
+                style={{ flex: 1, resize: "vertical", minHeight: 60 }}
                 placeholder={`${i + 1}번째 순서`}
                 value={step} onChange={(e) => updateStep(i, e.target.value)}
               />
               {steps.length > 1 && (
-                <button type="button" style={styles.removeBtn} className="hover-icon-btn" onClick={() => removeStep(i)}>✕</button>
+                <button type="button" className="form-remove-btn hover-icon-btn" onClick={() => removeStep(i)}>✕</button>
               )}
             </div>
           ))}
-          <button type="button" style={styles.addBtn} className="hover-subtle-btn" onClick={addStep}>+ 순서 추가</button>
+          <button type="button" className="form-add-btn hover-subtle-btn" onClick={addStep}>+ 순서 추가</button>
         </Field>
 
         <Field label="메모">
-          <textarea style={{ ...inputStyle(), resize: "vertical", minHeight: 80 }}
+          <textarea className="form-input" style={{ resize: "vertical", minHeight: 80 }}
             placeholder="추가 메모 (선택)" value={notes} onChange={(e) => setNotes(e.target.value)} />
         </Field>
 
-        <button type="submit" style={styles.submitBtn} className="fab-btn">저장하기</button>
+        <button type="submit" className="form-submit-btn fab-btn">저장하기</button>
       </form>
     </div>
   )
 }
 
-function Field({ label, error, children, style }) {
+function Field({ label, error, children }) {
   return (
-    <div style={{ ...styles.field, ...style }}>
-      <label style={styles.label}>{label}</label>
+    <div className="form-field">
+      <label className="form-label">{label}</label>
       {children}
-      {error && <p style={styles.error}>{error}</p>}
+      {error && <p className="form-error">{error}</p>}
     </div>
   )
-}
-
-const inputStyle = (error) => ({
-  width: "100%",
-  padding: "12px 16px",
-  borderRadius: "var(--radius-md)",
-  border: `1px solid ${error ? "#ef4444" : "var(--border-color)"}`,
-  fontSize: 16,
-  boxSizing: "border-box",
-  background: "var(--bg-input)",
-  transition: "border-color var(--transition-fast), box-shadow var(--transition-fast)",
-  color: "var(--text-main)",
-  outline: "none",
-  appearance: "none", // remove default styles on some browsers
-})
-
-const styles = {
-  page: { 
-    maxWidth: 640, 
-    margin: "0 auto", 
-    padding: "0 0 60px", 
-    minHeight: "100vh", 
-    position: "relative" 
-  },
-  header: { 
-    display: "flex", 
-    alignItems: "center", 
-    justifyContent: "space-between", 
-    padding: "16px 20px", 
-    position: "sticky", 
-    top: 0, 
-    background: "rgba(250, 250, 250, 0.85)",
-    backdropFilter: "blur(8px)",
-    WebkitBackdropFilter: "blur(8px)", 
-    zIndex: 10,
-    borderBottom: "1px solid var(--border-color)",
-  },
-  backBtn: { 
-    background: "none", 
-    border: "none", 
-    fontSize: 16, 
-    fontWeight: 600,
-    cursor: "pointer", 
-    color: "var(--text-main)", 
-    padding: "6px 8px", 
-    width: 70,
-    textAlign: "left",
-  },
-  heading: { margin: 0, fontSize: 18, fontWeight: 700, color: "var(--text-main)" },
-  form: { display: "flex", flexDirection: "column", gap: 24, padding: "24px 20px" },
-  field: { display: "flex", flexDirection: "column", gap: 10 },
-  label: { fontSize: 15, fontWeight: 600, color: "var(--text-main)" },
-  error: { margin: 0, fontSize: 13, color: "#ef4444", fontWeight: 500, marginTop: 4 },
-  chips: { display: "flex", gap: 8, flexWrap: "wrap" },
-  chip: { 
-    background: "var(--bg-card)", 
-    border: "1px solid var(--border-color)", 
-    borderRadius: "var(--radius-pill)", 
-    padding: "8px 16px", 
-    fontSize: 14, 
-    cursor: "pointer", 
-    color: "var(--text-muted)",
-    transition: "all var(--transition-fast)",
-    fontWeight: 500,
-  },
-  chipActive: { 
-    background: "var(--text-main)", 
-    color: "var(--bg-card)", 
-    borderColor: "var(--text-main)",
-    boxShadow: "var(--shadow-sm)",
-  },
-  row: { display: "flex", gap: 16 },
-  ingredientRow: { display: "flex", gap: 8, alignItems: "center" },
-  stepRow: { display: "flex", gap: 12, alignItems: "flex-start" },
-  stepNum: { 
-    width: 28, 
-    height: 28, 
-    borderRadius: "50%", 
-    background: "var(--primary)", 
-    color: "#fff", 
-    fontSize: 14, 
-    fontWeight: 700,
-    display: "flex", 
-    alignItems: "center", 
-    justifyContent: "center", 
-    flexShrink: 0, 
-    marginTop: 10,
-    boxShadow: "0 2px 4px rgba(255,107,107,0.2)",
-  },
-  removeBtn: { 
-    background: "none", 
-    border: "none", 
-    fontSize: 18, 
-    color: "var(--text-light)", 
-    cursor: "pointer", 
-    padding: "8px", 
-    flexShrink: 0,
-    transition: "color var(--transition-fast)",
-  },
-  addBtn: { 
-    background: "transparent", 
-    border: "1px dashed var(--border-color)", 
-    borderRadius: "var(--radius-md)", 
-    padding: "12px", 
-    fontSize: 15, 
-    fontWeight: 500,
-    color: "var(--text-muted)", 
-    cursor: "pointer", 
-    width: "100%",
-    transition: "all var(--transition-fast)",
-  },
-  imageUploadBtn: {
-    width: "100%",
-    padding: "32px",
-    border: "2px dashed var(--border-color)",
-    borderRadius: "var(--radius-lg)",
-    background: "var(--bg-input)",
-    color: "var(--text-muted)",
-    fontSize: 15,
-    fontWeight: 500,
-    cursor: "pointer",
-    transition: "all var(--transition-fast)",
-  },
-  imagePreviewWrapper: {
-    position: "relative",
-    borderRadius: "var(--radius-lg)",
-    overflow: "hidden",
-  },
-  imagePreview: {
-    width: "100%",
-    height: 220,
-    objectFit: "cover",
-    display: "block",
-  },
-  imageRemoveBtn: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    background: "rgba(0,0,0,0.55)",
-    color: "#fff",
-    border: "none",
-    borderRadius: "var(--radius-pill)",
-    padding: "6px 14px",
-    fontSize: 13,
-    fontWeight: 600,
-    cursor: "pointer",
-  },
-  submitBtn: {
-    background: "linear-gradient(135deg, var(--primary), var(--primary-hover))", 
-    color: "#fff", 
-    border: "none", 
-    borderRadius: "var(--radius-md)", 
-    padding: "16px", 
-    fontSize: 16, 
-    fontWeight: 700, 
-    cursor: "pointer", 
-    width: "100%",
-    boxShadow: "var(--shadow-md)",
-    marginTop: 8,
-  },
 }

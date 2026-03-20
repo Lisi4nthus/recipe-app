@@ -65,9 +65,10 @@ RecipeListPage
 
 ## Phase 3 — 예정
 
-### Firebase 마이그레이션
+### ~~Firebase 마이그레이션~~ ✅ 완료
 - localStorage → Firebase Firestore
-- 클라우드 저장 + 멀티기기 동기화
+- 이미지 base64 → Firestore 직접 저장
+- .env로 API 키 분리
 
 ### AI 재료 인식 → 레시피 추천
 - 재료 사진 촬영 → Anthropic API로 이미지 전송
