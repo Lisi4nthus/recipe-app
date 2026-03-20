@@ -1,44 +1,41 @@
 import { createContext, useContext, useState, useEffect } from "react"
+import { db } from "../firebase"
+import {
+  collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc,
+} from "firebase/firestore"
 
 const RecipeContext = createContext()
-const STORAGE_KEY = "recipes"
 
 export function RecipeProvider({ children }) {
-  const [recipes, setRecipes] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY)
-      return saved ? JSON.parse(saved) : []
-    } catch {
-      return []
-    }
-  })
+  const [recipes, setRecipes] = useState([])
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes))
-  }, [recipes])
+    const unsub = onSnapshot(collection(db, "recipes"), (snapshot) => {
+      const data = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }))
+      setRecipes(data)
+    })
+    return unsub
+  }, [])
 
   const addRecipe = (recipe) => {
-    setRecipes((prev) => [...prev, { ...recipe, id: Date.now().toString() }])
+    return addDoc(collection(db, "recipes"), recipe)
   }
 
   const updateRecipe = (id, updated) => {
-    setRecipes((prev) => prev.map((r) => (r.id === id ? { ...r, ...updated } : r)))
+    return updateDoc(doc(db, "recipes", id), updated)
   }
 
   const deleteRecipe = (id) => {
-    setRecipes((prev) => prev.filter((r) => r.id !== id))
+    return deleteDoc(doc(db, "recipes", id))
   }
 
   const toggleFavorite = (id) => {
-    setRecipes((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, favorite: !r.favorite } : r))
-    )
+    const recipe = recipes.find((r) => r.id === id)
+    if (recipe) return updateDoc(doc(db, "recipes", id), { favorite: !recipe.favorite })
   }
 
   const recordCooking = (id) => {
-    setRecipes((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, lastCooked: new Date().toISOString() } : r))
-    )
+    return updateDoc(doc(db, "recipes", id), { lastCooked: new Date().toISOString() })
   }
 
   return (
