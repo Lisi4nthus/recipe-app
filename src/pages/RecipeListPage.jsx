@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useRecipes } from "../context/RecipeContext"
 import RecipeCard from "../components/RecipeCard"
+import styles from "./RecipeListPage.module.css"
 
 const CATEGORIES = ["전체", "한식", "양식", "중식", "일식"]
 
@@ -18,31 +19,31 @@ export default function RecipeListPage({ onAdd, onSelect }) {
   })
 
   return (
-    <div className="page-list">
-      <header className="list-header">
-        <h1 className="list-heading">내 레시피</h1>
+    <div className={styles.page}>
+      <header className={styles.header}>
+        <h1 className={styles.heading}>내 레시피</h1>
         <button
-          className="list-favorite-toggle hover-subtle-btn"
+          className={`${styles.favoriteToggle} hover-subtle-btn`}
           onClick={() => setOnlyFavorite((v) => !v)}
         >
           {onlyFavorite ? "★ 즐겨찾기" : "☆ 즐겨찾기"}
         </button>
       </header>
 
-      <div className="list-search">
+      <div className={styles.search}>
         <input
-          className="list-search-input"
+          className={styles.searchInput}
           placeholder="레시피 검색..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
-      <div className="list-categories">
+      <div className={styles.categories}>
         {CATEGORIES.map((c) => (
           <button
             key={c}
-            className={`list-category-btn${category === c ? " list-category-btn--active" : ""}`}
+            className={`${styles.categoryBtn} ${category === c ? styles.categoryBtnActive : ""}`}
             onClick={() => setCategory(c)}
           >
             {c}
@@ -51,13 +52,13 @@ export default function RecipeListPage({ onAdd, onSelect }) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="list-empty">
+        <div className={styles.empty}>
           <p>레시피가 없습니다.</p>
-          <p className="list-empty-hint">아래 + 버튼으로 추가해보세요!</p>
+          <p className={styles.emptyHint}>아래 + 버튼으로 추가해보세요!</p>
         </div>
       ) : (
-        <div className="list-grid-container">
-          <div className="list-grid">
+        <div className={styles.gridContainer}>
+          <div className={styles.grid}>
             {filtered.map((recipe) => (
               <RecipeCard key={recipe.id} recipe={recipe} onSelect={() => onSelect(recipe.id)} />
             ))}
@@ -65,7 +66,7 @@ export default function RecipeListPage({ onAdd, onSelect }) {
         </div>
       )}
 
-      <button className="list-fab fab-btn" onClick={onAdd}>+</button>
+      <button className={`${styles.fab} fab-btn`} onClick={onAdd}>+</button>
     </div>
   )
 }

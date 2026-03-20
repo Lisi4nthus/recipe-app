@@ -1,0 +1,248 @@
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding-bottom: 60px;
+  position: relative;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  background: rgba(250, 250, 250, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.backBtn {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-main);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.headerActions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.iconBtn {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--primary);
+  border-radius: var(--radius-pill);
+  transition: background var(--transition-fast), transform var(--transition-bounce);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cookBtn {
+  background: var(--primary);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+  margin-left: 4px;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.35);
+  transition: background var(--transition-fast);
+}
+
+.body {
+  display: block;
+}
+
+@media (min-width: 860px) {
+  .body {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    align-items: start;
+  }
+
+  .left {
+    position: sticky;
+    top: 60px;
+  }
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+}
+
+.image {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+}
+
+.imageGradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(to top, var(--bg-main), transparent);
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 240px;
+  background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.lastCooked {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.ingredientList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ingredientItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.ingredientName {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.ingredientAmount {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.stepList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stepItem {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.stepNum {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(255, 107, 107, 0.3);
+}
+
+.stepText {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-main);
+}
+
+.notes {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  border: 1px dashed var(--border-color);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 0 24px;
+}

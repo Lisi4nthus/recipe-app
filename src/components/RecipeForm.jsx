@@ -1,4 +1,5 @@
 import { useState, useRef } from "react"
+import styles from "./RecipeForm.module.css"
 
 const CATEGORIES = ["한식", "양식", "중식", "일식"]
 const DIFFICULTIES = [
@@ -79,14 +80,14 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
   }
 
   return (
-    <div className="page-form">
-      <header className="form-header">
-        <button type="button" onClick={onBack} className="form-back-btn hover-subtle-btn">← 뒤로</button>
-        <h2 className="form-heading">{heading}</h2>
+    <div className={styles.page}>
+      <header className={styles.header}>
+        <button type="button" onClick={onBack} className={`${styles.backBtn} hover-subtle-btn`}>← 뒤로</button>
+        <h2 className={styles.heading}>{heading}</h2>
         <div style={{ width: 60 }} />
       </header>
 
-      <form onSubmit={handleSubmit} className="form-inner">
+      <form onSubmit={handleSubmit} className={styles.inner}>
         <Field label="사진">
           <input
             ref={fileInputRef}
@@ -96,11 +97,11 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
             onChange={handleImageChange}
           />
           {image ? (
-            <div className="form-image-preview-wrapper">
-              <img src={image} alt="미리보기" className="form-image-preview" />
+            <div className={styles.imagePreviewWrapper}>
+              <img src={image} alt="미리보기" className={styles.imagePreview} />
               <button
                 type="button"
-                className="form-image-remove-btn"
+                className={styles.imageRemoveBtn}
                 onClick={() => { setImage(null); fileInputRef.current.value = "" }}
               >
                 ✕ 사진 제거
@@ -109,7 +110,7 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
           ) : (
             <button
               type="button"
-              className="form-image-upload-btn"
+              className={styles.imageUploadBtn}
               onClick={() => fileInputRef.current.click()}
             >
               📷 사진 추가
@@ -119,7 +120,7 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
 
         <Field label="제목 *" error={errors.title}>
           <input
-            className={`form-input${errors.title ? " form-input--error" : ""}`}
+            className={`${styles.input} ${errors.title ? styles.inputError : ""}`}
             placeholder="레시피 이름"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -127,11 +128,11 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
         </Field>
 
         <Field label="카테고리">
-          <div className="form-chips">
+          <div className={styles.chips}>
             {CATEGORIES.map((c) => (
               <button
                 type="button" key={c}
-                className={`form-chip${category === c ? " form-chip--active" : ""}`}
+                className={`${styles.chip} ${category === c ? styles.chipActive : ""}`}
                 onClick={() => setCategory((prev) => (prev === c ? "" : c))}
               >{c}</button>
             ))}
@@ -139,69 +140,69 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
         </Field>
 
         <Field label="난이도">
-          <div className="form-chips">
+          <div className={styles.chips}>
             {DIFFICULTIES.map((d) => (
               <button
                 type="button" key={d.value}
-                className={`form-chip${difficulty === d.value ? " form-chip--active" : ""}`}
+                className={`${styles.chip} ${difficulty === d.value ? styles.chipActive : ""}`}
                 onClick={() => setDifficulty((prev) => (prev === d.value ? "" : d.value))}
               >{d.label}</button>
             ))}
           </div>
         </Field>
 
-        <div className="form-row">
+        <div className={styles.row}>
           <Field label="조리 시간 (분)">
-            <input className="form-input" type="number" min="1" placeholder="30"
+            <input className={styles.input} type="number" min="1" placeholder="30"
               value={cookingTime} onChange={(e) => setCookingTime(e.target.value)} />
           </Field>
           <Field label="인분">
-            <input className="form-input" type="number" min="1" placeholder="2"
+            <input className={styles.input} type="number" min="1" placeholder="2"
               value={servings} onChange={(e) => setServings(e.target.value)} />
           </Field>
         </div>
 
         <Field label="재료 *" error={errors.ingredients}>
           {ingredients.map((ing, i) => (
-            <div key={i} className="form-ingredient-row">
-              <input className="form-input" placeholder="재료명"
+            <div key={i} className={styles.ingredientRow}>
+              <input className={styles.input} placeholder="재료명"
                 value={ing.name} onChange={(e) => updateIngredient(i, "name", e.target.value)} />
-              <input className="form-input" placeholder="양"
+              <input className={styles.input} placeholder="양"
                 value={ing.amount} onChange={(e) => updateIngredient(i, "amount", e.target.value)} />
-              <input className="form-input" placeholder="단위"
+              <input className={styles.input} placeholder="단위"
                 value={ing.unit} onChange={(e) => updateIngredient(i, "unit", e.target.value)} />
               {ingredients.length > 1 && (
-                <button type="button" className="form-remove-btn hover-icon-btn" onClick={() => removeIngredient(i)}>✕</button>
+                <button type="button" className={`${styles.removeBtn} hover-icon-btn`} onClick={() => removeIngredient(i)}>✕</button>
               )}
             </div>
           ))}
-          <button type="button" className="form-add-btn hover-subtle-btn" onClick={addIngredient}>+ 재료 추가</button>
+          <button type="button" className={`${styles.addBtn} hover-subtle-btn`} onClick={addIngredient}>+ 재료 추가</button>
         </Field>
 
         <Field label="조리법 *" error={errors.steps}>
           {steps.map((step, i) => (
-            <div key={i} className="form-step-row">
-              <span className="form-step-num">{i + 1}</span>
+            <div key={i} className={styles.stepRow}>
+              <span className={styles.stepNum}>{i + 1}</span>
               <textarea
-                className="form-input"
+                className={styles.input}
                 style={{ flex: 1, resize: "vertical", minHeight: 60 }}
                 placeholder={`${i + 1}번째 순서`}
                 value={step} onChange={(e) => updateStep(i, e.target.value)}
               />
               {steps.length > 1 && (
-                <button type="button" className="form-remove-btn hover-icon-btn" onClick={() => removeStep(i)}>✕</button>
+                <button type="button" className={`${styles.removeBtn} hover-icon-btn`} onClick={() => removeStep(i)}>✕</button>
               )}
             </div>
           ))}
-          <button type="button" className="form-add-btn hover-subtle-btn" onClick={addStep}>+ 순서 추가</button>
+          <button type="button" className={`${styles.addBtn} hover-subtle-btn`} onClick={addStep}>+ 순서 추가</button>
         </Field>
 
         <Field label="메모">
-          <textarea className="form-input" style={{ resize: "vertical", minHeight: 80 }}
+          <textarea className={styles.input} style={{ resize: "vertical", minHeight: 80 }}
             placeholder="추가 메모 (선택)" value={notes} onChange={(e) => setNotes(e.target.value)} />
         </Field>
 
-        <button type="submit" className="form-submit-btn fab-btn">저장하기</button>
+        <button type="submit" className={`${styles.submitBtn} fab-btn`}>저장하기</button>
       </form>
     </div>
   )
@@ -209,10 +210,10 @@ export default function RecipeForm({ initial, onSubmit, onBack, heading }) {
 
 function Field({ label, error, children }) {
   return (
-    <div className="form-field">
-      <label className="form-label">{label}</label>
+    <div className={styles.field}>
+      <label className={styles.label}>{label}</label>
       {children}
-      {error && <p className="form-error">{error}</p>}
+      {error && <p className={styles.error}>{error}</p>}
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useRecipes } from "../context/RecipeContext"
+import styles from "./CookingModePage.module.css"
 
 export default function CookingModePage({ recipeId, onBack }) {
   const { recipes, recordCooking } = useRecipes()
@@ -9,8 +10,8 @@ export default function CookingModePage({ recipeId, onBack }) {
 
   if (!recipe) {
     return (
-      <div className="cooking-page">
-        <button onClick={onBack} className="cooking-exit-btn">✕ 나가기</button>
+      <div className={styles.page}>
+        <button onClick={onBack} className={styles.exitBtn}>✕ 나가기</button>
         <p style={{ textAlign: "center", color: "#aaa", marginTop: 80 }}>레시피를 찾을 수 없습니다.</p>
       </div>
     )
@@ -27,55 +28,55 @@ export default function CookingModePage({ recipeId, onBack }) {
 
   if (done) {
     return (
-      <div className="cooking-page">
-        <div className="cooking-done-wrap">
-          <div className="cooking-done-emoji">🎉</div>
-          <h2 className="cooking-done-title">조리 완료!</h2>
-          <p className="cooking-done-sub">{recipe.title}</p>
-          <p className="cooking-done-date">
+      <div className={styles.page}>
+        <div className={styles.doneWrap}>
+          <div className={styles.doneEmoji}>🎉</div>
+          <h2 className={styles.doneTitle}>조리 완료!</h2>
+          <p className={styles.doneSub}>{recipe.title}</p>
+          <p className={styles.doneDate}>
             {new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" })} 요리 기록 저장됨
           </p>
-          <button onClick={onBack} className="cooking-done-btn">← 레시피로 돌아가기</button>
+          <button onClick={onBack} className={styles.doneBtn}>← 레시피로 돌아가기</button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="cooking-page">
-      <header className="cooking-header">
-        <button onClick={onBack} className="cooking-exit-btn hover-subtle-btn">✕ 나가기</button>
-        <span className="cooking-recipe-title">{recipe.title}</span>
-        <span className="cooking-progress-label">{step + 1} / {total}</span>
+    <div className={styles.page}>
+      <header className={styles.header}>
+        <button onClick={onBack} className={`${styles.exitBtn} hover-subtle-btn`}>✕ 나가기</button>
+        <span className={styles.recipeTitle}>{recipe.title}</span>
+        <span className={styles.progressLabel}>{step + 1} / {total}</span>
       </header>
 
-      <div className="cooking-progress-bar-bg">
+      <div className={styles.progressBarBg}>
         <div
-          className="cooking-progress-bar-fill"
+          className={styles.progressBarFill}
           style={{ width: `${((step + 1) / total) * 100}%` }}
         />
       </div>
 
-      <div className="cooking-body">
-        <div className="cooking-step-badge">{step + 1}단계</div>
-        <p className="cooking-step-text">{steps[step]}</p>
+      <div className={styles.body}>
+        <div className={styles.stepBadge}>{step + 1}단계</div>
+        <p className={styles.stepText}>{steps[step]}</p>
       </div>
 
-      <div className="cooking-footer">
+      <div className={styles.footer}>
         <button
           onClick={() => setStep((s) => s - 1)}
           disabled={step === 0}
-          className="cooking-nav-btn hover-subtle-btn"
+          className={`${styles.navBtn} hover-subtle-btn`}
         >
           ← 이전
         </button>
 
         {isLast ? (
-          <button onClick={handleComplete} className="cooking-complete-btn">
+          <button onClick={handleComplete} className={styles.completeBtn}>
             조리 완료 ✓
           </button>
         ) : (
-          <button onClick={() => setStep((s) => s + 1)} className="cooking-next-btn hover-subtle-btn">
+          <button onClick={() => setStep((s) => s + 1)} className={`${styles.nextBtn} hover-subtle-btn`}>
             다음 →
           </button>
         )}
