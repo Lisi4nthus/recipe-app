@@ -4,6 +4,7 @@ import RecipeListPage from "./pages/RecipeListPage"
 import AddRecipePage from "./pages/AddRecipePage"
 import RecipeDetailPage from "./pages/RecipeDetailPage"
 import EditRecipePage from "./pages/EditRecipePage"
+import CookingModePage from "./pages/CookingModePage"
 
 function App() {
   const [page, setPage] = useState("list")
@@ -11,6 +12,7 @@ function App() {
 
   const goDetail = (id) => { setSelectedId(id); setPage("detail") }
   const goEdit = (id) => { setSelectedId(id); setPage("edit") }
+  const goCooking = (id) => { setSelectedId(id); setPage("cooking") }
 
   return (
     <RecipeProvider>
@@ -23,10 +25,17 @@ function App() {
           recipeId={selectedId}
           onBack={() => setPage("list")}
           onEdit={() => goEdit(selectedId)}
+          onCook={() => goCooking(selectedId)}
         />
       )}
       {page === "edit" && (
         <EditRecipePage
+          recipeId={selectedId}
+          onBack={() => goDetail(selectedId)}
+        />
+      )}
+      {page === "cooking" && (
+        <CookingModePage
           recipeId={selectedId}
           onBack={() => goDetail(selectedId)}
         />

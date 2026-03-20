@@ -2,7 +2,7 @@ import { useRecipes } from "../context/RecipeContext"
 
 const difficultyLabel = { easy: "쉬움", medium: "보통", hard: "어려움" }
 
-export default function RecipeDetailPage({ recipeId, onBack, onEdit }) {
+export default function RecipeDetailPage({ recipeId, onBack, onEdit, onCook }) {
   const { recipes, toggleFavorite, deleteRecipe } = useRecipes()
   const recipe = recipes.find((r) => r.id === recipeId)
 
@@ -33,6 +33,7 @@ export default function RecipeDetailPage({ recipeId, onBack, onEdit }) {
           </button>
           <button onClick={onEdit} style={styles.iconBtn} className="hover-icon-btn">✏️</button>
           <button onClick={handleDelete} style={styles.iconBtn} className="hover-icon-btn">🗑</button>
+          <button onClick={onCook} style={styles.cookBtn} className="hover-subtle-btn">🍳 조리 시작</button>
         </div>
       </header>
 
@@ -58,6 +59,14 @@ export default function RecipeDetailPage({ recipeId, onBack, onEdit }) {
               {recipe.cookingTime && <Tag>⏱ {recipe.cookingTime}분</Tag>}
               {recipe.servings && <Tag>👤 {recipe.servings}인분</Tag>}
             </div>
+            {recipe.lastCooked && (
+              <p style={styles.lastCooked}>
+                마지막 조리:{" "}
+                {new Date(recipe.lastCooked).toLocaleDateString("ko-KR", {
+                  year: "numeric", month: "long", day: "numeric",
+                })}
+              </p>
+            )}
           </div>
 
           <Divider />
@@ -291,5 +300,24 @@ const styles = {
     border: "none",
     borderTop: "1px solid var(--border-color)",
     margin: "0 24px",
+  },
+  cookBtn: {
+    background: "var(--primary)",
+    border: "none",
+    borderRadius: "var(--radius-pill)",
+    padding: "8px 16px",
+    fontSize: 14,
+    fontWeight: 700,
+    cursor: "pointer",
+    color: "#fff",
+    marginLeft: 4,
+    boxShadow: "0 2px 8px rgba(255,107,107,0.35)",
+    transition: "background var(--transition-fast)",
+  },
+  lastCooked: {
+    margin: 0,
+    fontSize: 13,
+    color: "var(--text-muted)",
+    fontWeight: 500,
   },
 }

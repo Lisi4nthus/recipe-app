@@ -35,8 +35,14 @@ export function RecipeProvider({ children }) {
     )
   }
 
+  const recordCooking = (id) => {
+    setRecipes((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, lastCooked: new Date().toISOString() } : r))
+    )
+  }
+
   return (
-    <RecipeContext.Provider value={{ recipes, addRecipe, updateRecipe, deleteRecipe, toggleFavorite }}>
+    <RecipeContext.Provider value={{ recipes, addRecipe, updateRecipe, deleteRecipe, toggleFavorite, recordCooking }}>
       {children}
     </RecipeContext.Provider>
   )
